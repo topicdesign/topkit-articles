@@ -54,4 +54,4 @@ if ( ! function_exists('article_url'))
 // --------------------------------------------------------------------
 
 /* End of file article_helper.php */
-/* Location: ./helpers/article_helper.php */
+/* Location: ./third_party/helpers/article_helper.php */

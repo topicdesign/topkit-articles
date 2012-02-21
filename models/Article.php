@@ -192,4 +192,4 @@ CREATE TABLE `articles` (
 **/
 
 /* End of file Article.php */
-/* Location: ./application/models/Article.php */
+/* Location: ./third_party/models/Article.php */

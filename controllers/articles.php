@@ -195,4 +195,4 @@ class Articles extends Public_Controller {
 
 }
 /* End of file articles.php */
-/* Location: ./application/controllers/articles.php */
+/* Location: ./third_party/controllers/articles.php */

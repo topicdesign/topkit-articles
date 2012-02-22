@@ -14,6 +14,7 @@ class Articles extends Public_Controller {
     {
         parent::__construct();
         $this->load->helper('article');
+        $this->config->load('articles');
     }
 
     // --------------------------------------------------------------------
@@ -152,7 +153,7 @@ class Articles extends Public_Controller {
                 break;
         }
         // get a page of articles 
-        $per_page = 3;
+        $per_page = config_item('articles_per_page');
         $config = array(
             'start' => $start,
             'end'   => $end,
@@ -161,10 +162,6 @@ class Articles extends Public_Controller {
             'page'      => $page
         );
         $result = Article::paginated($config);
-        if ( ! $result->articles)
-        {
-            show_404();
-        }
         // setup pagination
         $segments = $this->uri->segment_array();
         if ($key = array_search('page', $segments))
@@ -195,4 +192,4 @@ class Articles extends Public_Controller {
 
 }
 /* End of file articles.php */
-/* Location: ./third_party/controllers/articles.php */
+/* Location: ./third_party/articles/controllers/articles.php */

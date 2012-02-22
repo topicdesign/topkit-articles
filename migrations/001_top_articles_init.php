@@ -65,3 +65,5 @@ class Migration_Top_articles_init extends CI_Migration {
     // --------------------------------------------------------------------
 
 }
+/* End of file 001_top_articles_init.php */
+/* Location: ./third_party/articles/migrations/001_top_articles_init.php */

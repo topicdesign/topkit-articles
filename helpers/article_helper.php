@@ -19,10 +19,12 @@
  * @return  string
  **/
 if ( ! function_exists('get_articles_url'))
-{
+
     function get_articles_url()
     {
-        return 'articles';
+        $CI = get_instance();
+        $CI->config->load('articles');
+        return $CI->config->item('articles_base_url');
     }
 }
 
@@ -54,4 +56,4 @@ if ( ! function_exists('article_url'))
 // --------------------------------------------------------------------
 
 /* End of file article_helper.php */
-/* Location: ./third_party/helpers/article_helper.php */
+/* Location: ./third_party/articles/helpers/article_helper.php */

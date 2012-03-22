@@ -5,6 +5,7 @@
 | -------------------------------------------------------------------------
 */
 
+$config['articles_title'] = 'Articles';
 $config['articles_base_url'] = 'articles';
 $config['articles_per_page'] = 5;
 

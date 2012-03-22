@@ -1,6 +1,6 @@
-<section id="articles-index">
+<section id="articles-index" class="page">
     <header>
-        <h1><?php echo $template['title']; ?></h1>
+        <h1><?php echo page_title(); ?></h1>
     </header>
     <div class="section-content">
         <?php if ( ! count($articles)): ?>

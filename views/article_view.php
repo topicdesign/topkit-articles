@@ -1,4 +1,4 @@
-<article id="article-<?php echo $article->id; ?>" class="article preview">
+<article id="article-<?php echo $article->id; ?>" class="page article view">
     <header>
         <h1><?php echo $article->title; ?></h1>
     </header>
@@ -6,6 +6,6 @@
         <?php echo $article->content; ?>
     </div>
     <footer>
-        <p>Published: <time pubdate="pubdate" datetime="<?php echo $article->local_pubdate('Y-m-d'); ?>"><?php echo $article->local_pubdate(); ?></time></p>
+        <p class="pubdate"><?php echo local_pubdate($article->published_at); ?></p>
     </footer>
 </article>

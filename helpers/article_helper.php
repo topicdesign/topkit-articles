@@ -19,7 +19,7 @@
  * @return  string
  **/
 if ( ! function_exists('get_articles_url'))
-
+{
     function get_articles_url()
     {
         $CI = get_instance();

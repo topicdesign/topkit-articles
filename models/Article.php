@@ -76,27 +76,6 @@ class Article extends ActiveRecord\Model {
     // --------------------------------------------------------------------
 
     /**
-     * get a formated published date in the site timezone
-     *
-     * @access  public
-     * @param   string  $format     string accepted by date()
-     *
-     * @return  string
-     **/
-    public function local_pubdate($format = NULL)
-    {
-        // use provided format, or site default
-        $format = $format ?: config_item('site_date_format');
-        // convert to local timezone
-        $date = $this->published_at;
-        $date->setTimezone(new DateTimeZone(config_item('site_timezone')));
-
-        return $date->format($format);
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * find article with specified params
      *
      * @access  public
@@ -180,9 +159,10 @@ class Article extends ActiveRecord\Model {
 
 CREATE TABLE `articles` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(120) DEFAULT NULL,
-  `slug` varchar(120) DEFAULT NULL,
-  `content` text,
+  `title` varchar(120) NOT NULL,
+  `slug` varchar(120) NOT NULL,
+  `preview` text,
+  `content` text NOT NULL,
   `published_at` datetime DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,

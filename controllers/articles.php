@@ -15,6 +15,7 @@ class Articles extends Public_Controller {
         parent::__construct();
         $this->load->helper('article');
         $this->config->load('articles');
+        $this->page->title(config_item('articles_title'));
     }
 
     // --------------------------------------------------------------------
@@ -53,7 +54,7 @@ class Articles extends Public_Controller {
                 : 1;
             $params = array_slice($params, 0, $page_key);
         }
-        // params shoud now be (YYYY,MM,DD,title)
+        // params should now be (YYYY,MM,DD,title)
         if (count($params) == 4)
         {
             return $this->view($params);
@@ -96,10 +97,10 @@ class Articles extends Public_Controller {
         {
             show_404();
         }
-        $data['article'] = $article;
-        $this->template
-            ->title($article->title, 'Articles', config_item('site_title')) 
-            ->build('articles/article_view.php', $data);
+        $this->page
+            ->title($article->title) 
+            ->data('article', $article)
+            ->build('articles/article_view');
     }
 
     // --------------------------------------------------------------------
@@ -117,7 +118,6 @@ class Articles extends Public_Controller {
     {
         $TZ = new DateTimeZone(config_item('site_timezone'));
         // set date limits based on params
-        $title_segments = array('Articles', config_item('site_title')); 
         switch (count($params))
         {
             case 1:
@@ -127,7 +127,7 @@ class Articles extends Public_Controller {
                 $end = clone $start;
                 $end->modify('+1 year');
                 
-                array_unshift($title_segments, $start->format('Y'));
+                $this->page->title($start->format('Y'));
                 break;
             case 2:
                 // limit by month
@@ -136,7 +136,7 @@ class Articles extends Public_Controller {
                 $end = clone $start;
                 $end->modify('+1 month');
 
-                array_unshift($title_segments, $start->format('F, Y'));
+                $this->page->title($start->format('F, Y'));
                 break;
             case 3:
                 // limit by day
@@ -144,19 +144,18 @@ class Articles extends Public_Controller {
                 $end = clone $start;
                 $end->modify('+1 day');
 
-                array_unshift($title_segments, $start->format('F j, Y'));
+                $this->page->title($start->format('F j, Y'));
                 break;
             default:
                 // no limit
                 $start = $end = NULL;
-                $title = NULL;
                 break;
         }
         // get a page of articles 
         $per_page = config_item('articles_per_page');
         $config = array(
-            'start' => $start,
-            'end'   => $end,
+            'start'     => $start,
+            'end'       => $end,
             'published' => cannot('manage', 'article'),
             'per_page'  => $per_page,
             'page'      => $page
@@ -178,14 +177,9 @@ class Articles extends Public_Controller {
         );
         $this->pagify->initialize($config);
         // output the index
-        $data = array(
-            'articles' => $result->articles
-        );
-        // set title from prepared segments
-        call_user_func_array(array($this->template, 'title'), $title_segments);
-        $this->template
-            //->title($title_segments)
-            ->build('articles/articles_index.php', $data);
+        $this->page
+            ->data('articles',$result->articles)
+            ->build('articles/articles_index');
     }
 
     // --------------------------------------------------------------------

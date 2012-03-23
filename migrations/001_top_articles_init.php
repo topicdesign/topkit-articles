@@ -13,34 +13,37 @@ class Migration_Top_articles_init extends CI_Migration {
     public function up()
     {
         $this->dbforge->add_field(array(
-            'id'    => array(
-                'type'          => 'INT',
-                'constraint'    => '11',
-                'unsigned'      => TRUE,
+            'id' => array(
+                'type'              => 'INT',
+                'constraint'        => '11',
+                'unsigned'          => TRUE,
                 'auto_increment'    => TRUE
             ),
             'title' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => '120',
+                'type'              => 'VARCHAR',
+                'constraint'        => '120',
             ),
             'slug' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => '120',
+                'type'              => 'VARCHAR',
+                'constraint'        => '120',
             ),
-            'content'   => array(
-                'type'          => 'TEXT',
+            'preview' => array(
+                'type'              => 'TEXT',
             ),
-            'published_at'  => array(
-                'type'          => 'DATETIME',
-                'null'          => TRUE
+            'content' => array(
+                'type'              => 'TEXT',
             ),
-            'created_at'  => array(
-                'type'          => 'DATETIME',
-                'null'          => TRUE
+            'published_at' => array(
+                'type'              => 'DATETIME',
+                'null'              => TRUE
             ),
-            'updated_at'  => array(
-                'type'          => 'DATETIME',
-                'null'          => TRUE
+            'created_at' => array(
+                'type'              => 'DATETIME',
+                'null'              => TRUE
+            ),
+            'updated_at' => array(
+                'type'              => 'DATETIME',
+                'null'              => TRUE
             ),
         ));
         $this->dbforge->add_key('id', TRUE);
@@ -58,8 +61,8 @@ class Migration_Top_articles_init extends CI_Migration {
      * @return  void
      **/
     public function down()
-    { 
-		$this->dbforge->drop_table('articles');
+    {
+        $this->dbforge->drop_table('articles');
     }
 
     // --------------------------------------------------------------------

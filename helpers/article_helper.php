@@ -2,10 +2,10 @@
 /**
  * Article Helpers
  *
- * @package		Article
- * @subpackage	Helpers
- * @author		Topic Design
- * @license		http://creativecommons.org/licenses/BSD/
+ * @package     Article
+ * @subpackage  Helpers
+ * @author      Topic Design
+ * @license     http://creativecommons.org/licenses/BSD/
  */
 
 // --------------------------------------------------------------------
@@ -33,24 +33,22 @@ if ( ! function_exists('get_articles_url'))
 /**
  * get url for Article
  *
- * @access	public
- * @param	object  $article
+ * @access  public
+ * @param   object  $article
  *
  * @return  string
  */
 if ( ! function_exists('article_url'))
 {
-	function article_url($a)
+    function article_url($a)
     {
         $segments = array(
             get_articles_url(),
-            $a->local_pubdate('Y'),
-            $a->local_pubdate('m'),
-            $a->local_pubdate('d'),
+            local_date_format($a->published_at, 'Y/m/d'),
             $a->slug
         );
         return site_url(implode('/', $segments));
-	}
+    }
 }
 
 // --------------------------------------------------------------------

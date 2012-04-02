@@ -53,5 +53,33 @@ if ( ! function_exists('article_url'))
 
 // --------------------------------------------------------------------
 
+/**
+ * get the URL used for the Articles controller
+ *
+ * @access  public
+ * @param   void
+ *
+ * @return  string
+ **/
+if ( ! function_exists('get_latest_articles'))
+{
+    function get_latest_articles($limit = 1, $category = NULL)
+    {
+        $options = array(
+            'limit' => $limit,
+            'order' => 'published_at desc'
+        );
+        if ($category) 
+        {
+            $category = Category::find_by_category($category);
+            $options['conditions'] = array('category_id = ?',$category->id);
+        }
+        $articles = Article::all($options);
+        return $articles;
+    }
+}
+
+// --------------------------------------------------------------------
+
 /* End of file article_helper.php */
 /* Location: ./third_party/articles/helpers/article_helper.php */

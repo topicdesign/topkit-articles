@@ -55,16 +55,22 @@ class Articles extends Public_Controller {
             $params = array_slice($params, 0, $page_key);
         }
         // params should now be (YYYY,MM,DD,title)
-        if (count($params) == 4)
+        if (count($params) == 4 && is_numeric($params[0]))
         {
             return $this->view($params);
+        }
+        //check for category
+        $categories = array();
+        if ( ! is_numeric($params[0]) && $params[0] != 'index') 
+        {
+            $categories[] = array_shift($params); 
         }
         // clear params if default method call
         if ( ! empty($params) && $params[0] == 'index')
         {
             $params = array();
         }
-        return $this->paginated($page, $params);
+        return $this->paginated($categories, $params, $page);
     }
 
     // --------------------------------------------------------------------
@@ -102,6 +108,33 @@ class Articles extends Public_Controller {
             ->data('article', $article)
             ->build('articles/article_view');
     }
+    
+    // --------------------------------------------------------------------
+
+    /**
+     * categories
+     *
+     * @access  public 
+     * 
+     * @return void
+     **/
+    public function categories()
+    {   
+        $params = $this->uri->segment_array();
+        array_shift($params);
+        $page = 1;
+        $page_key = array_search('page', $params);
+        if ($page_key !== FALSE)
+        {
+            $page = isset($params[$page_key + 1])
+                ? $params[$page_key + 1]
+                : 1;
+            $params = array_slice($params, 0, $page_key);
+        }
+        $cat_key = array_search(config_item('articles_categories_url'),$params);
+        $categories = array_slice($params,$cat_key+1);
+        $this->paginated($categories,array(),$page);
+    }
 
     // --------------------------------------------------------------------
 
@@ -114,16 +147,16 @@ class Articles extends Public_Controller {
      *
      * @return  void
      **/
-    private function paginated($page, $params)
+    private function paginated($categories, $dates = array(), $page = 1)
     {
         $TZ = new DateTimeZone(config_item('site_timezone'));
         // set date limits based on params
-        switch (count($params))
+        switch (count($dates))
         {
             case 1:
                 // limit by year
-                $params += array(1,1);
-                $start = date_create(implode('-', $params), $TZ);
+                $dates += array(1,1);
+                $start = date_create(implode('-', $dates), $TZ);
                 $end = clone $start;
                 $end->modify('+1 year');
                 
@@ -131,8 +164,8 @@ class Articles extends Public_Controller {
                 break;
             case 2:
                 // limit by month
-                $params += array(1);
-                $start = date_create(implode('-', $params), $TZ);
+                $dates += array(1);
+                $start = date_create(implode('-', $dates), $TZ);
                 $end = clone $start;
                 $end->modify('+1 month');
 
@@ -140,7 +173,7 @@ class Articles extends Public_Controller {
                 break;
             case 3:
                 // limit by day
-                $start = date_create(implode('-', $params), $TZ);
+                $start = date_create(implode('-', $dates), $TZ);
                 $end = clone $start;
                 $end->modify('+1 day');
 
@@ -158,7 +191,8 @@ class Articles extends Public_Controller {
             'end'       => $end,
             'published' => cannot('manage', 'article'),
             'per_page'  => $per_page,
-            'page'      => $page
+            'page'      => $page,
+            'categories'  => $categories
         );
         $result = Article::paginated($config);
         // setup pagination
@@ -176,6 +210,26 @@ class Articles extends Public_Controller {
             'per_page' => $per_page
         );
         $this->pagify->initialize($config);
+        $options = array(
+            'conditions' => array(''),
+        );
+        //build query string to get categories
+        foreach ($categories as $category)
+        {   
+            $cat_queries[] = 'slug = ?';
+            $options['conditions'][] = $category;
+        }
+        $options['conditions'][0] = implode(' OR ',$cat_queries);
+        //get all specified category names
+        $cat_result = Category::all($options);
+        //build array of category titles
+        $cat_titles = array();
+        foreach ($cat_result as $cat)
+        {   
+            $cat_titles[] = $cat->category;
+        }
+        //update page title with categories
+        $this->page->title($cat_titles);
         // output the index
         $this->page
             ->data('articles',$result->articles)

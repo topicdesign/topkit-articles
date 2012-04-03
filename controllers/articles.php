@@ -210,29 +210,13 @@ class Articles extends Public_Controller {
             'per_page' => $per_page
         );
         $this->pagify->initialize($config);
-        $options = array(
-            'conditions' => array(''),
-        );
-        //build query string to get categories
-        foreach ($categories as $category)
-        {   
-            $cat_queries[] = 'slug = ?';
-            $options['conditions'][] = $category;
-        }
-        $options['conditions'][0] = implode(' OR ',$cat_queries);
-        //get all specified category names
-        $cat_result = Category::all($options);
-        //build array of category titles
-        $cat_titles = array();
-        foreach ($cat_result as $cat)
-        {   
-            $cat_titles[] = $cat->category;
-        }
-        //update page title with categories
-        $this->page->title($cat_titles);
         // output the index
+        $page_data = array(
+            'articles' => $result->articles,
+            'categories' => $categories                
+        );
         $this->page
-            ->data('articles',$result->articles)
+            ->data($page_data)
             ->build('articles/articles_index');
     }
 

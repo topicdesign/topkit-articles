@@ -42,6 +42,15 @@ class Category extends ActiveRecord\Model
     // Validations
     // --------------------------------------------------------------------
     
+    static $validates_presence_of = array(
+        array('category')
+    );
+    
+    static $validates_length_of = array(
+        array('category','maximum' => 50),
+        array('parent_category_id','maximum' => 11)
+    );
+    
     // --------------------------------------------------------------------
     // Setter/Getter Methods
     // --------------------------------------------------------------------

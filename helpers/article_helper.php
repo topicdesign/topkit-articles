@@ -81,5 +81,47 @@ if ( ! function_exists('get_latest_articles'))
 
 // --------------------------------------------------------------------
 
+/**
+ * get_page_header
+ *
+ * @access  public 
+ * 
+ * @return void
+ **/
+if ( ! function_exists('get_articles_page_title'))
+{
+    function get_articles_page_title($categories = array())
+    {   
+        if (empty($categories)) 
+        {
+            $CI = get_instance();
+            return $CI->page->title;             
+        }
+        $options = array(
+            'conditions' => array(''),
+        );
+        $cat_queries = array();
+        //build query string to get categories
+        foreach ($categories as $category)
+        {   
+            $cat_queries[] = 'slug = ?';
+            $options['conditions'][] = $category;
+        }
+        $options['conditions'][0] = implode(' OR ',$cat_queries);
+        //get all specified category names
+        $cat_result = Category::all($options);
+        //build array of category titles
+        $cat_titles = array();
+        foreach ($cat_result as $cat)
+        {   
+            $cat_titles[] = $cat->category;
+        }
+        //update page title with categories
+        return implode(' | ',$cat_titles);
+    }
+}
+
+// --------------------------------------------------------------------
+
 /* End of file article_helper.php */
 /* Location: ./third_party/articles/helpers/article_helper.php */

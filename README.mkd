@@ -1,8 +1,6 @@
 topkit Articles Module
 ======================
 
-ver:0.1.3
-
 The [topkit][tk] Articles Module is a basic blog package, it implements a chronologically organized collection of articles.
 
 **All topkit modules are designed specifically to work with our framework, your milage may vary**

@@ -149,7 +149,7 @@ class Article extends ActiveRecord\Model {
                 $conditions[] = date_create()->format('Y-m-d H:i:s');
             }
         }
-        if (isset($categories)) 
+        if ( ! empty($categories)) 
         {
             $joins[] = 'category';
             $cat_queries = array();

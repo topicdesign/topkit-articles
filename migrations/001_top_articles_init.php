@@ -102,7 +102,7 @@ class Migration_Top_articles_init extends CI_Migration {
             ),
         ));
         $this->dbforge->add_key('id');
-        $this->dbforge->create_table('categories');
+        $this->dbforge->create_table('article_categories');
     }
 
     // --------------------------------------------------------------------

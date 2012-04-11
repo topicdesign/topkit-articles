@@ -15,7 +15,7 @@ class Articles extends Public_Controller {
         parent::__construct();
         $this->load->helper('article');
         $this->config->load('articles');
-        $this->page->title(config_item('articles_title'));
+        $this->document->title(config_item('articles_title'));
     }
 
     // --------------------------------------------------------------------
@@ -103,7 +103,7 @@ class Articles extends Public_Controller {
         {
             show_404();
         }
-        $this->page
+        $this->document
             ->title($article->title) 
             ->data('article', $article)
             ->build('articles/article_view');
@@ -160,7 +160,7 @@ class Articles extends Public_Controller {
                 $end = clone $start;
                 $end->modify('+1 year');
                 
-                $this->page->title($start->format('Y'));
+                $this->document->title($start->format('Y'));
                 break;
             case 2:
                 // limit by month
@@ -169,7 +169,7 @@ class Articles extends Public_Controller {
                 $end = clone $start;
                 $end->modify('+1 month');
 
-                $this->page->title($start->format('F, Y'));
+                $this->document->title($start->format('F, Y'));
                 break;
             case 3:
                 // limit by day
@@ -177,7 +177,7 @@ class Articles extends Public_Controller {
                 $end = clone $start;
                 $end->modify('+1 day');
 
-                $this->page->title($start->format('F j, Y'));
+                $this->document->title($start->format('F j, Y'));
                 break;
             default:
                 // no limit
@@ -215,7 +215,7 @@ class Articles extends Public_Controller {
             'articles' => $result->articles,
             'categories' => $categories                
         );
-        $this->page
+        $this->document
             ->data($page_data)
             ->build('articles/articles_index');
     }

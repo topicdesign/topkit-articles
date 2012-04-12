@@ -15,7 +15,7 @@ class Articles extends Public_Controller {
         parent::__construct();
         $this->load->helper('article');
         $this->config->load('articles');
-        $this->page->title(config_item('articles_title'));
+        $this->document->title(config_item('articles_title'));
     }
 
     // --------------------------------------------------------------------
@@ -55,16 +55,22 @@ class Articles extends Public_Controller {
             $params = array_slice($params, 0, $page_key);
         }
         // params should now be (YYYY,MM,DD,title)
-        if (count($params) == 4)
+        if (count($params) == 4 && is_numeric($params[0]))
         {
             return $this->view($params);
+        }
+        //check for category
+        $categories = array();
+        if ( ! is_numeric($params[0]) && $params[0] != 'index') 
+        {
+            $categories[] = array_shift($params); 
         }
         // clear params if default method call
         if ( ! empty($params) && $params[0] == 'index')
         {
             $params = array();
         }
-        return $this->paginated($page, $params);
+        return $this->paginated($categories, $params, $page);
     }
 
     // --------------------------------------------------------------------
@@ -97,10 +103,37 @@ class Articles extends Public_Controller {
         {
             show_404();
         }
-        $this->page
+        $this->document
             ->title($article->title) 
             ->data('article', $article)
             ->build('articles/article_view');
+    }
+    
+    // --------------------------------------------------------------------
+
+    /**
+     * categories
+     *
+     * @access  public 
+     * 
+     * @return void
+     **/
+    public function categories()
+    {   
+        $params = $this->uri->segment_array();
+        array_shift($params);
+        $page = 1;
+        $page_key = array_search('page', $params);
+        if ($page_key !== FALSE)
+        {
+            $page = isset($params[$page_key + 1])
+                ? $params[$page_key + 1]
+                : 1;
+            $params = array_slice($params, 0, $page_key);
+        }
+        $cat_key = array_search(config_item('articles_categories_url'),$params);
+        $categories = array_slice($params,$cat_key+1);
+        $this->paginated($categories,array(),$page);
     }
 
     // --------------------------------------------------------------------
@@ -114,37 +147,37 @@ class Articles extends Public_Controller {
      *
      * @return  void
      **/
-    private function paginated($page, $params)
+    private function paginated($categories, $dates = array(), $page = 1)
     {
         $TZ = new DateTimeZone(config_item('site_timezone'));
         // set date limits based on params
-        switch (count($params))
+        switch (count($dates))
         {
             case 1:
                 // limit by year
-                $params += array(1,1);
-                $start = date_create(implode('-', $params), $TZ);
+                $dates += array(1,1);
+                $start = date_create(implode('-', $dates), $TZ);
                 $end = clone $start;
                 $end->modify('+1 year');
                 
-                $this->page->title($start->format('Y'));
+                $this->document->title($start->format('Y'));
                 break;
             case 2:
                 // limit by month
-                $params += array(1);
-                $start = date_create(implode('-', $params), $TZ);
+                $dates += array(1);
+                $start = date_create(implode('-', $dates), $TZ);
                 $end = clone $start;
                 $end->modify('+1 month');
 
-                $this->page->title($start->format('F, Y'));
+                $this->document->title($start->format('F, Y'));
                 break;
             case 3:
                 // limit by day
-                $start = date_create(implode('-', $params), $TZ);
+                $start = date_create(implode('-', $dates), $TZ);
                 $end = clone $start;
                 $end->modify('+1 day');
 
-                $this->page->title($start->format('F j, Y'));
+                $this->document->title($start->format('F j, Y'));
                 break;
             default:
                 // no limit
@@ -158,7 +191,8 @@ class Articles extends Public_Controller {
             'end'       => $end,
             'published' => cannot('manage', 'article'),
             'per_page'  => $per_page,
-            'page'      => $page
+            'page'      => $page,
+            'categories'  => $categories
         );
         $result = Article::paginated($config);
         // setup pagination
@@ -177,8 +211,12 @@ class Articles extends Public_Controller {
         );
         $this->pagify->initialize($config);
         // output the index
-        $this->page
-            ->data('articles',$result->articles)
+        $page_data = array(
+            'articles' => $result->articles,
+            'categories' => $categories                
+        );
+        $this->document
+            ->data($page_data)
             ->build('articles/articles_index');
     }
 

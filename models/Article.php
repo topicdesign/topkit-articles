@@ -27,13 +27,29 @@ class Article extends ActiveRecord\Model {
 
     static $belongs_to = array(
         array(
-            'category'
+            'category',
+            'class_name' => 'Article\Category'
         )
     );
     
     // --------------------------------------------------------------------
     // Validations
     // --------------------------------------------------------------------
+    
+    static $validates_presence_of = array(
+        array('title'),
+        array('slug'),
+        array('content')
+    );
+
+    static $validates_length_of = array(
+        array('title','maximum' => 120),
+        array('slug','maximum' => 120)
+    );
+
+    static $validates_uniqueness_of = array(
+        array('slug')
+    );
     
     // --------------------------------------------------------------------
     // Setter/Getter Methods
@@ -119,38 +135,51 @@ class Article extends ActiveRecord\Model {
         extract($config);
         // create result object
         $result = new stdClass();
+        //init table joins
+        $joins = array();
         // init conditions array
-        $cond = array('');
+        $conditions = array('');
+        $queries = array();
         // limit to published articles?
         if (isset($published))
         {
             if ($published)
             {
-                $cond[0] .= 'published_at < ?';
-                $cond[] = date_create()->format('Y-m-d H:i:s');
+                $queries[] = 'articles.published_at < ?';
+                $conditions[] = date_create()->format('Y-m-d H:i:s');
             }
+        }
+        if ( ! empty($categories)) 
+        {
+            $joins[] = 'category';
+            $cat_queries = array();
+            foreach ($categories as $category)
+            {   
+                $cat_queries[] = 'categories.slug = ?';
+                $conditions[] = $category;
+            }
+            $queries[] = implode(' OR ',$cat_queries);
         }
         // limit to timespan
         if ( ! empty($start) && ! empty($end))
         {
-            if ( ! empty($cond[0]))
-            {
-                $cond[0] .= ' AND ';
-            }
             // convert timezones
             $start->setTimezone(new DateTimeZone('GMT'));
             $end->setTimezone(new DateTimeZone('GMT'));
             // append condition
-            $cond[0] .= 'published_at > ? AND published_at < ?';
-            $cond[] = $start->format('Y-m-d H:i:s');
-            $cond[] = $end->format('Y-m-d H:i:s');
+            $queries[] .= 'articles.published_at > ? AND articles.published_at < ?';
+            //$cond[0] .= 'published_at > ? AND published_at < ?';
+            $conditions[] = $start->format('Y-m-d H:i:s');
+            $conditions[] = $end->format('Y-m-d H:i:s');
         }
+        $conditions[0] = implode(' AND ', $queries);
         // setup finder options
         $options = array(
-            'order'     => 'published_at desc',
+            'order'     => 'articles.published_at desc',
             'limit'     => $per_page,
             'offset'    => ($per_page * $page) - $per_page,
-            'conditions'=> $cond
+            'conditions'=> $conditions,
+            'joins'     => $joins
         );
         // get the articles
         $result->articles = static::all($options);

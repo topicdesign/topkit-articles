@@ -1,12 +1,16 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php 
+
+namespace Article;
+
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
  * Category Class
  */
-class Category extends ActiveRecord\Model
+class Category extends \ActiveRecord\Model
 {
     # explicit table name  
-    static $table_name = 'categories';
+    static $table_name = 'article_categories';
 
     # explicit pk 
     //static $primary_key = '';
@@ -24,7 +28,7 @@ class Category extends ActiveRecord\Model
     static $belongs_to = array(
         array(
             'parent',
-            'class_name' => 'Category',
+            'class_name' => 'Article\Category',
             'foreign_key' => 'parent_category_id'
         )
     );
@@ -33,7 +37,7 @@ class Category extends ActiveRecord\Model
         array('articles'),
         array(
             'children',
-            'class_name' => 'Category',
+            'class_name' => 'Article\Category',
             'foreign_key' => 'parent_category_id'
         )
     );
@@ -41,6 +45,15 @@ class Category extends ActiveRecord\Model
     // --------------------------------------------------------------------
     // Validations
     // --------------------------------------------------------------------
+    
+    static $validates_presence_of = array(
+        array('category')
+    );
+    
+    static $validates_length_of = array(
+        array('category','maximum' => 50),
+        array('parent_category_id','maximum' => 11)
+    );
     
     // --------------------------------------------------------------------
     // Setter/Getter Methods

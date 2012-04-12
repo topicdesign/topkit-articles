@@ -71,11 +71,52 @@ if ( ! function_exists('get_latest_articles'))
         );
         if ($category) 
         {
-            $category = Category::find_by_category($category);
+            $category = Article\Category::find_by_category($category);
             $options['conditions'] = array('category_id = ?',$category->id);
         }
         $articles = Article::all($options);
         return $articles;
+    }
+}
+
+// --------------------------------------------------------------------
+
+/**
+ * get_page_header
+ *
+ * @access  public 
+ * 
+ * @return void
+ **/
+if ( ! function_exists('get_articles_page_title'))
+{
+    function get_articles_page_title($categories = array())
+    {   
+        if (empty($categories)) 
+        {
+            return config_item('articles_title');             
+        }
+        $options = array(
+            'conditions' => array(''),
+        );
+        $cat_queries = array();
+        //build query string to get categories
+        foreach ($categories as $category)
+        {   
+            $cat_queries[] = 'slug = ?';
+            $options['conditions'][] = $category;
+        }
+        $options['conditions'][0] = implode(' OR ',$cat_queries);
+        //get all specified category names
+        $cat_result = Article\Category::all($options);
+        //build array of category titles
+        $cat_titles = array();
+        foreach ($cat_result as $cat)
+        {   
+            $cat_titles[] = $cat->category;
+        }
+        //update page title with categories
+        return implode(' | ',$cat_titles);
     }
 }
 

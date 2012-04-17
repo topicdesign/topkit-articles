@@ -12,8 +12,8 @@ class Migration_Top_articles_init extends CI_Migration {
      **/
     public function up()
     {
-        add_articles();
-        add_categories();
+        $this->add_articles();
+        $this->add_categories();
     }
     
     // --------------------------------------------------------------------
@@ -101,7 +101,7 @@ class Migration_Top_articles_init extends CI_Migration {
                 'null'              => TRUE,
             ),
         ));
-        $this->dbforge->add_key('id');
+        $this->dbforge->add_key('id',TRUE);
         $this->dbforge->create_table('article_categories');
     }
 

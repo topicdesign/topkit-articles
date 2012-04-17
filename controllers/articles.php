@@ -61,14 +61,17 @@ class Articles extends Public_Controller {
         }
         //check for category
         $categories = array();
-        if ( ! is_numeric($params[0]) && $params[0] != 'index') 
+        if ( ! empty($params)) 
         {
-            $categories[] = array_shift($params); 
-        }
-        // clear params if default method call
-        if ( ! empty($params) && $params[0] == 'index')
-        {
-            $params = array();
+            if ( ! is_numeric($params[0]) && $params[0] != 'index') 
+            {
+                $categories[] = array_shift($params); 
+            }
+            // clear params if default method call
+            if ( $params[0] == 'index')
+            {
+                $params = array();
+            }
         }
         return $this->paginated($categories, $params, $page);
     }

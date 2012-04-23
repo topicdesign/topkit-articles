@@ -52,20 +52,23 @@ class Admin extends Admin_Controller {
         $rules = array(
             array(
                 'field' => 'title',
-                'label' => 'lang:page-field-title',
-                'rules' => 'required'
-            ),
-            array(
-                'field' => 'publish-time',
-                'label' => 'lang:page-field-publish_time',
-                'rules' => 'required'
-            ),
-            array(
-                'field' => 'publish-date',
-                'label' => 'lang:page-field-published_at',
+                'label' => 'lang:article-field-title',
                 'rules' => 'required'
             ),
         );
+        if ( ! $article->published_at || $article->published_at > date_create())
+        {
+            $rules[] = array(
+                'field' => 'publish-time',
+                'label' => 'lang:article-field-publish_time',
+                'rules' => 'required'
+            );
+            $rules[] = array(
+                'field' => 'publish-date',
+                'label' => 'lang:article-field-published_at',
+                'rules' => 'required'
+            );
+        }
         $this->form_validation->set_rules($rules);
         if ($this->form_validation->run() == FALSE)
         {

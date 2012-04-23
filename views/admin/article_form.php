@@ -28,6 +28,7 @@
             <fieldset class="well">
                 <div class="control-group btn-toolbar">
                     <label for="article-form-publish" class="text"><?php echo lang('article-field-published_at'); ?></label>
+                    <?php if ( ! $article->published_at || $article->published_at > date_create()): ?>
                     <div class="controls">
                         <input id="article-form-publish" name="publish-date"
                             type="text"
@@ -42,6 +43,9 @@
                             data-role="timepicker"
                             >
                     </div>
+                    <?php else: ?>
+                    <p>Published on <?php echo local_date_format($article->published_at, 'Y/m/d g:i A'); ?></p>
+                    <?php endif; ?>
                 </div>
                 <div class="control-group">
                     <label for="article-form-preview" class="textarea"><?php echo lang('article-field-preview'); ?></label>

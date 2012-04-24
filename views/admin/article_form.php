@@ -48,6 +48,15 @@
                     <?php endif; ?>
                 </div>
                 <div class="control-group">
+                    <label for="article-form-category" class="select"><?php echo lang('article-field-category'); ?></label>
+                    <select id="article-form-category" name="category">
+                        <option>Choose a category</option>
+                    <?php foreach ($categories as $c): ?>
+                        <option value="<?php echo $c->id; ?>" <?php if ($c->id == $article->category_id) echo 'selected="selected"'; ?>><?php echo $c->category; ?></option>
+                    <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="control-group">
                     <label for="article-form-preview" class="textarea"><?php echo lang('article-field-preview'); ?></label>
                     <div class="controls">
                         <textarea id="article-form-preview" name="preview"

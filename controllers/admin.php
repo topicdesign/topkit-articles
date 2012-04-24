@@ -77,6 +77,7 @@ class Admin extends Admin_Controller {
                 set_status('error', $e);
             }
             $data['article'] = $article;
+            $data['categories'] = Article\Category::all();
             $this->document->build('articles/admin/article_edit.php', $data);
         }
         else
@@ -92,6 +93,7 @@ class Admin extends Admin_Controller {
                 new DateTimeZone(config_item('site_timezone'))
             );
             $article->published_at->setTimezone(new DateTimeZone('GMT'));
+            $article->category_id = $this->input->post('category');
 
             if ( ! $article->save())
             {

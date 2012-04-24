@@ -15,6 +15,7 @@ $lang['article-field-published_at']    = 'Published Date';
 $lang['article-field-created_at']      = 'Created Date';
 $lang['article-field-updated_at']      = 'Edited Date';
 $lang['article-field-publish_time']    = 'Published Time';
+$lang['article-field-category']        = 'Category';
 
 // ------------------------------------------------------------------------
 

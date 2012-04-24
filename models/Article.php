@@ -28,8 +28,20 @@ class Article extends ActiveRecord\Model {
     static $belongs_to = array(
         array(
             'category',
-            'class_name' => 'Article\Category'
+            'class_name' => '\Article\Category'
         )
+    );
+
+    static $has_many = array(
+        array(
+            'articlestags',
+            'class_name'    => '\Article\ArticlesTags',
+        ),
+        array(
+            'tags', 
+            'class_name'    => '\Article\Tag',
+            'through'       => 'articlestags'
+        ),
     );
     
     // --------------------------------------------------------------------

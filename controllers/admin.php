@@ -76,8 +76,24 @@ class Admin extends Admin_Controller {
             {
                 set_status('error', $e);
             }
+            $tags = \Article\Tag::all();
+            $tag_list = array();
+            foreach ($tags as $tag)
+            {
+                $tag_list[] = $tag->title;
+            }
+            $data['tags'] = json_encode($tag_list);
+            $article_tags = array();
+            if ($article->tags)
+            {
+                foreach ($article->tags as $tag)
+                {
+                    $article_tags[] = $tag->title;
+                }
+            }
+            $data['article_tags'] = implode(', ', $article_tags);
             $data['article'] = $article;
-            $data['categories'] = Article\Category::all();
+            $data['categories'] = \Article\Category::all();
             $this->document->build('articles/admin/article_edit.php', $data);
         }
         else
@@ -103,6 +119,37 @@ class Admin extends Admin_Controller {
                 }
                 redirect(uri_string());
             }
+
+            // tags
+            if ($article->tags)
+            {
+                $tags_to_delete = array();
+                foreach ($article->tags as $tag)
+                {
+                    $tags_to_delete[] = $tag->id;
+                }
+                \Article\Tag::table()->delete(array('id' => $tags_to_delete));
+            }
+            $new_tags = explode(',', $this->input->post('tags'));
+            foreach ($new_tags as $new_tag)
+            {
+                $new_tag = trim($new_tag);
+
+                $tag = \Article\Tag::find('first', array('conditions' => array('title = ?', $new_tag)));
+
+                if ( ! $tag)
+                {
+                    $tag = new \Article\Tag();
+                    $tag->title = $new_tag;
+                    $tag->save();
+                }
+
+                $relation = new \Article\ArticlesTags();
+                $relation->tag_id = $tag->id; 
+                $relation->article_id = $article->id;
+                $relation->save();
+            }
+
             set_status('success', 'Article Updated');
             redirect('admin/articles');
         }

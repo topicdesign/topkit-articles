@@ -57,6 +57,18 @@
                     </select>
                 </div>
                 <div class="control-group">
+                    <label for="article-form-tags" class="text"><?php echo lang('article-field-tags'); ?></label>
+                    <div class="controls">
+                        <input id="article-form-tags" name="tags"
+                            type="text"
+                            value="<?php echo set_value('tags',$article_tags); ?>"
+                            class="text"
+                            data-role="tagcomplete" 
+                            data-source="<?php echo htmlentities($tags); ?>"
+                            >
+                    </div>
+                </div>
+                <div class="control-group">
                     <label for="article-form-preview" class="textarea"><?php echo lang('article-field-preview'); ?></label>
                     <div class="controls">
                         <textarea id="article-form-preview" name="preview"

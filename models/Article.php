@@ -9,17 +9,19 @@
  */
 class Article extends ActiveRecord\Model {
 
-    # explicit table name  
+    # explicit table name
     static $table_name = 'articles';
 
-    # explicit pk 
+    # explicit pk
     //static $primary_key = '';
 
-    # explicit connection name 
+    # explicit connection name
     //static $connection = '';
 
-    # explicit database name 
+    # explicit database name
     //static $db = '';
+
+    static $before_save = array('generate_slug');
 
     // --------------------------------------------------------------------
     // Associations
@@ -38,16 +40,16 @@ class Article extends ActiveRecord\Model {
             'class_name'    => '\Article\ArticlesTags',
         ),
         array(
-            'tags', 
+            'tags',
             'class_name'    => '\Article\Tag',
             'through'       => 'articlestags'
         ),
     );
-    
+
     // --------------------------------------------------------------------
     // Validations
     // --------------------------------------------------------------------
-    
+
     static $validates_presence_of = array(
         array('title'),
         array('slug'),
@@ -62,7 +64,7 @@ class Article extends ActiveRecord\Model {
     static $validates_uniqueness_of = array(
         array('slug')
     );
-    
+
     // --------------------------------------------------------------------
     // Setter/Getter Methods
     // --------------------------------------------------------------------
@@ -102,7 +104,7 @@ class Article extends ActiveRecord\Model {
             'conditions' => array(
                 'published_at < ?',
                 date_create()
-            ) 
+            )
         );
         return static::all($options);
     }
@@ -161,12 +163,12 @@ class Article extends ActiveRecord\Model {
                 $conditions[] = date_create()->format('Y-m-d H:i:s');
             }
         }
-        if ( ! empty($categories)) 
+        if ( ! empty($categories))
         {
             $joins[] = 'category';
             $cat_queries = array();
             foreach ($categories as $category)
-            {   
+            {
                 $cat_queries[] = 'categories.slug = ?';
                 $conditions[] = $category;
             }
@@ -199,6 +201,54 @@ class Article extends ActiveRecord\Model {
         return $result;
     }
 
+    // --------------------------------------------------------------------
+
+    /**
+     * check if published_at is in the past
+     *
+     * @access  public
+     * @param   void
+     *
+     * @return  bool
+     **/
+    public function is_published()
+    {
+       return ($this->published_at && $this->published_at <= date_create());
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * generate a unique slug for this record
+     *
+     * @access  public
+     * @param   int     $i      counter for non-unique slug
+     *
+     * @return  void
+     **/
+    public function generate_slug($i = 1)
+    {
+        $slug = url_title($this->title, 'underscore', TRUE);
+        $cur = $this->slug;
+        if ($slug == $cur)
+        {
+            return;
+        }
+        // check if slug exists
+        if ( $i > 1)
+        {
+            $slug .= $i;
+        }
+        if (self::exists($slug))
+        {
+            return $this->generate_slug(++$i);
+        }
+        else
+        {
+            $this->slug = $slug;
+        }
+    }
+    // --------------------------------------------------------------------
     // --------------------------------------------------------------------
 }
 /**

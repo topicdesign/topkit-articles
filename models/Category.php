@@ -10,7 +10,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Category extends \ActiveRecord\Model
 {
     # explicit table name
-    static $table_name = 'categories';
+    static $table_name = 'article_categories';
 
     # explicit pk
     //static $primary_key = '';

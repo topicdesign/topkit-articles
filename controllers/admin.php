@@ -55,20 +55,12 @@ class Admin extends Admin_Controller {
                 'label' => 'lang:article-field-title',
                 'rules' => 'required'
             ),
+            array(
+                'field' => 'content',
+                'label' => 'lang:article-field-content',
+                'rules' => 'required'
+            ),
         );
-        if ( ! $article->published_at || $article->published_at > date_create())
-        {
-            $rules[] = array(
-                'field' => 'publish-time',
-                'label' => 'lang:article-field-publish_time',
-                'rules' => 'required'
-            );
-            $rules[] = array(
-                'field' => 'publish-date',
-                'label' => 'lang:article-field-published_at',
-                'rules' => 'required'
-            );
-        }
         $this->form_validation->set_rules($rules);
         if ($this->form_validation->run() == FALSE)
         {
@@ -98,18 +90,27 @@ class Admin extends Admin_Controller {
         }
         else
         {
-            $article->title = $this->input->post('title');
-            $article->slug = url_title($article->title, 'underscore', TRUE);
-            $article->preview = $this->input->post('preview');
-            $article->content = $this->input->post('content');
-            $article->published_at = date_create(
-                $this->input->post('publish-date') . ' ' .
-                $this->input->post('publish-time') . ' ' .
-                $this->input->post('publish-time-ampm'),
-                new DateTimeZone(config_item('site_timezone'))
-            );
-            $article->published_at->setTimezone(new DateTimeZone('GMT'));
+            $article->title       = $this->input->post('title');
+            $article->preview     = $this->input->post('preview');
+            $article->content     = $this->input->post('content');
             $article->category_id = $this->input->post('category');
+
+            if ($this->input->post('publish-date'))
+            {
+                // convert published datetime to GMT
+                $article->published_at = date_create(
+                    $this->input->post('publish-date') . ' ' .
+                    $this->input->post('publish-time') . ' ' .
+                    $this->input->post('publish-time-ampm'),
+                    new DateTimeZone(config_item('site_timezone'))
+                );
+                $article->published_at->setTimezone(new DateTimeZone('GMT'));
+            }
+            else if ( ! $article->is_published() && ! empty($article->published_at))
+            {
+                // clear published date if user emptied field
+                $article->published_at = NULL;
+            }
 
             if ( ! $article->save())
             {

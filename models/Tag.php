@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Article;
 
@@ -14,16 +14,16 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
  */
 class Tag extends \ActiveRecord\Model {
 
-    # explicit table name  
+    # explicit table name
     static $table_name = 'tags';
 
-    # explicit pk 
+    # explicit pk
     //static $primary_key = '';
 
-    # explicit connection name 
+    # explicit connection name
     //static $connection = '';
 
-    # explicit database name 
+    # explicit database name
     //static $db = '';
 
     // --------------------------------------------------------------------
@@ -35,15 +35,15 @@ class Tag extends \ActiveRecord\Model {
             'class_name'    => '\Article\ArticlesTags',
         ),
         array(
-            'articles', 
+            'articles',
             'through'       => 'articlestags'
         ),
     );
-    
+
     // --------------------------------------------------------------------
     // Validations
     // --------------------------------------------------------------------
-    
+
     // --------------------------------------------------------------------
     // Public Methods
     // --------------------------------------------------------------------

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Article;
 
@@ -9,22 +9,22 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
  */
 class Category extends \ActiveRecord\Model
 {
-    # explicit table name  
-    static $table_name = 'article_categories';
+    # explicit table name
+    static $table_name = 'categories';
 
-    # explicit pk 
+    # explicit pk
     //static $primary_key = '';
 
-    # explicit connection name 
+    # explicit connection name
     //static $connection = '';
 
-    # explicit database name 
+    # explicit database name
     //static $db = '';
 
     // --------------------------------------------------------------------
     // Associations
     // --------------------------------------------------------------------
-    
+
     static $belongs_to = array(
         array(
             'parent',
@@ -41,20 +41,20 @@ class Category extends \ActiveRecord\Model
             'foreign_key' => 'parent_category_id'
         )
     );
-    
+
     // --------------------------------------------------------------------
     // Validations
     // --------------------------------------------------------------------
-    
+
     static $validates_presence_of = array(
         array('category')
     );
-    
+
     static $validates_length_of = array(
         array('category','maximum' => 50),
         array('parent_category_id','maximum' => 11)
     );
-    
+
     // --------------------------------------------------------------------
     // Setter/Getter Methods
     // --------------------------------------------------------------------
@@ -63,7 +63,7 @@ class Category extends \ActiveRecord\Model
 
 /**
  * SQL for table
- 
+
  CREATE TABLE `categories` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `category` varchar(50) NOT NULL DEFAULT '',

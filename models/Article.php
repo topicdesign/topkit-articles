@@ -28,8 +28,20 @@ class Article extends ActiveRecord\Model {
     static $belongs_to = array(
         array(
             'category',
-            'class_name' => 'Article\Category'
+            'class_name' => '\Article\Category'
         )
+    );
+
+    static $has_many = array(
+        array(
+            'articlestags',
+            'class_name'    => '\Article\ArticlesTags',
+        ),
+        array(
+            'tags', 
+            'class_name'    => '\Article\Tag',
+            'through'       => 'articlestags'
+        ),
     );
     
     // --------------------------------------------------------------------
@@ -201,6 +213,7 @@ CREATE TABLE `articles` (
   `published_at` datetime DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `category_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

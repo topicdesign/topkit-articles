@@ -3,7 +3,7 @@
 /**
  * Dashboard Buttons
  */
-$lang['article-edit-title'] = 'Article Editor';
+$lang['article-admin-title'] = 'Article Editor';
 
 /**
  * Field Labels

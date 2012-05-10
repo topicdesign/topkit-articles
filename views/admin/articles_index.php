@@ -32,8 +32,10 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="#"><i class="icon-check"></i>&nbsp;Preview</a></li>
-                                <li><a href="#"><i class="icon-trash"></i>&nbsp;Delete</a></li>
+                                <li><a href="<?php echo article_url($a); ?>"><i class="icon-check"></i>&nbsp;Preview</a></li>
+                            <?php if (can('delete', $a)): ?>
+                                <li><a href="<?php echo site_url('admin/articles/delete/'.$a->id); ?>" title="Delete '<?php echo $a->title; ?>'." data-prompt><i class="icon-remove"></i>&nbsp;Delete</a></li>
+                            <?php endif; ?>
                             </ul>
                         </div>
 

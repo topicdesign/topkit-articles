@@ -158,6 +158,36 @@ class Articles extends Admin_Controller {
 
     // --------------------------------------------------------------------
 
+    /**
+     * delete
+     *
+     * @access  public
+     * @param   $id
+     * @return  void
+     **/
+    public function delete($id)
+    {
+      if ( ! $article = Article::find_by_id($id))
+      {
+          set_status('error', sprintf(lang('not_found'), 'article'));
+      }
+      else if (cannot('delete', $article))
+      {
+          set_status('error', lang('not_authorized'));
+      }
+      else if ( ! $article->delete())
+      {
+          set_status('error', 'Unable to delete requested article.');
+      }
+      else
+      {
+          set_status('success', 'Article deleted');
+      }
+      $this->history->back();
+    }
+
+    // --------------------------------------------------------------------
+
 }
 /* End of file articles.php */
 /* Location: ./application/controllers/admin/articles.php */

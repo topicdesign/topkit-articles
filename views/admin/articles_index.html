@@ -14,7 +14,6 @@
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Tags</th>
                     <th>Published</th>
                     <th class="pull-right">Actions</th>
                 </tr>
@@ -23,7 +22,6 @@
             <?php foreach ($articles as $a): ?>
                 <tr>
                     <td><?php echo $a->title; ?></td>
-                    <td><?php //echo $a->preview; ?></td>
                     <td><?php echo $a->is_published() ? local_pubdate($a->published_at, 'Y-m-d') : 'draft'; ?></td>
                     <td>
                         <div class="btn-group pull-right">

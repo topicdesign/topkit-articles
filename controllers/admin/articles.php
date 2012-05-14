@@ -86,7 +86,7 @@ class Articles extends Admin_Controller {
             $data['article_tags'] = implode(', ', $article_tags);
             $data['article'] = $article;
             $data['categories'] = \Article\Category::all();
-            $this->document->build('articles/admin/article_edit.php', $data);
+            $this->document->build('articles/admin/article_edit', $data);
         }
         else
         {

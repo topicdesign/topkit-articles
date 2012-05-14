@@ -61,11 +61,11 @@ class Articles extends Public_Controller {
         }
         //check for category
         $categories = array();
-        if ( ! empty($params)) 
+        if ( ! empty($params))
         {
-            if ( ! is_numeric($params[0]) && $params[0] != 'index') 
+            if ( ! is_numeric($params[0]) && $params[0] != 'index')
             {
-                $categories[] = array_shift($params); 
+                $categories[] = array_shift($params);
             }
             // clear params if default method call
             if ( $params[0] == 'index')
@@ -107,22 +107,22 @@ class Articles extends Public_Controller {
             show_404();
         }
         $this->document
-            ->title($article->title) 
+            ->title($article->title)
             ->data('article', $article)
             ->build('articles/article_view');
     }
-    
+
     // --------------------------------------------------------------------
 
     /**
      * categories
      *
-     * @access  public 
-     * 
+     * @access  public
+     *
      * @return void
      **/
     public function categories()
-    {   
+    {
         $params = $this->uri->segment_array();
         array_shift($params);
         $page = 1;
@@ -162,7 +162,7 @@ class Articles extends Public_Controller {
                 $start = date_create(implode('-', $dates), $TZ);
                 $end = clone $start;
                 $end->modify('+1 year');
-                
+
                 $this->document->title($start->format('Y'));
                 break;
             case 2:
@@ -187,7 +187,7 @@ class Articles extends Public_Controller {
                 $start = $end = NULL;
                 break;
         }
-        // get a page of articles 
+        // get a page of articles
         $per_page = config_item('articles_per_page');
         $config = array(
             'start'     => $start,
@@ -216,7 +216,7 @@ class Articles extends Public_Controller {
         // output the index
         $page_data = array(
             'articles' => $result->articles,
-            'categories' => $categories                
+            'categories' => $categories
         );
         $this->document
             ->data($page_data)

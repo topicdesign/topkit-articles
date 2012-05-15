@@ -135,7 +135,7 @@ class Articles extends Public_Controller {
             $params = array_slice($params, 0, $page_key);
         }
         $cat_key = array_search(config_item('articles_categories_url'),$params);
-        $categories = array_slice($params,$cat_key+1);
+        $categories = explode('&',$params[$cat_key+1]);
         $this->paginated($categories,array(),$page);
     }
 

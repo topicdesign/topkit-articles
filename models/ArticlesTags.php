@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Article;
 
@@ -14,34 +14,34 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
  */
 class ArticlesTags extends \ActiveRecord\Model {
 
-    # explicit table name  
+    # explicit table name
     static $table_name = 'articles_tags';
 
-    # explicit pk 
+    # explicit pk
     //static $primary_key = '';
 
-    # explicit connection name 
+    # explicit connection name
     //static $connection = '';
 
-    # explicit database name 
+    # explicit database name
     //static $db = '';
 
     // --------------------------------------------------------------------
     // Associations
     // --------------------------------------------------------------------
 
-    static $has_one = array(
+    static $belongs_to = array(
         array(
-            'tags',
-            'class_name'    => '\Article\Tag',
+            'tag',
+            'class_name'    => '\Tag',
         ),
-        array('articles'),
+        array('article'),
     );
-    
+
     // --------------------------------------------------------------------
     // Validations
     // --------------------------------------------------------------------
-    
+
     // --------------------------------------------------------------------
     // Public Methods
     // --------------------------------------------------------------------
@@ -57,9 +57,10 @@ CREATE TABLE `articles_tags` (
   `article_id` int(11) DEFAULT NULL,
   `tag_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 **/
 
+// --------------------------------------------------------------------
 /* End of file ArticlesTags.php */
 /* Location: ./application/models/ArticlesTags.php */

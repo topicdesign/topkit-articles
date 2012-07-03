@@ -3,17 +3,39 @@
 class Migration_Top_articles_init extends CI_Migration {
 
     /**
-     * add articles table
+     * add articles tables
      *
      * @access  public
      * @param   void
-     *
      * @return  void
      **/
     public function up()
     {
         $this->add_articles();
         $this->add_categories();
+        $this->add_tags();
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * drop articles tables
+     *
+     * @access  public
+     * @param   void
+     * @return  void
+     **/
+    public function down()
+    {
+        $tables = array(
+            'articles',
+            'article_categories',
+            'images',
+        );
+        foreach ($tables as $table)
+        {
+            $this->dbforge->drop_table($table);
+        }
     }
 
     // --------------------------------------------------------------------
@@ -21,48 +43,48 @@ class Migration_Top_articles_init extends CI_Migration {
     /**
      * add_articles
      *
-     * @access  public
-     *
-     * @return void
+     * @access  private
+     * @param   void
+     * @return  void
      **/
-    public function add_articles()
+    private function add_articles()
     {
         $this->dbforge->add_field(array(
-            'id' => array(
+            'id'            => array(
                 'type'              => 'INT',
                 'constraint'        => '11',
                 'unsigned'          => TRUE,
                 'auto_increment'    => TRUE
             ),
-            'title' => array(
+            'title'         => array(
                 'type'              => 'VARCHAR',
                 'constraint'        => '120',
             ),
-            'slug' => array(
+            'slug'          => array(
                 'type'              => 'VARCHAR',
                 'constraint'        => '120',
             ),
-            'category_id' => array(
+            'category_id'   => array(
                 'type'              => 'INT',
                 'constraint'        => '11',
                 'unsigned'          => TRUE,
                 'null'              => TRUE
             ),
-            'preview' => array(
+            'preview'       => array(
                 'type'              => 'TEXT',
             ),
-            'content' => array(
+            'content'       => array(
                 'type'              => 'TEXT',
             ),
-            'published_at' => array(
+            'published_at'  => array(
                 'type'              => 'DATETIME',
                 'null'              => TRUE
             ),
-            'created_at' => array(
+            'created_at'    => array(
                 'type'              => 'DATETIME',
                 'null'              => TRUE
             ),
-            'updated_at' => array(
+            'updated_at'    => array(
                 'type'              => 'DATETIME',
                 'null'              => TRUE
             ),
@@ -76,25 +98,25 @@ class Migration_Top_articles_init extends CI_Migration {
     /**
      * add_categories
      *
-     * @access  public
-     *
-     * @return void
+     * @access  private
+     * @param   void
+     * @return  void
      **/
-    public function add_categories()
+    private function add_categories()
     {
         $this->dbforge->add_field(array(
-            'id' => array(
+            'id'            => array(
                 'type'              => 'INT',
                 'constraint'        => '11',
                 'unsigned'          => TRUE,
                 'auto_increment'    => TRUE
             ),
-            'category' => array(
+            'category'      => array(
                 'type'              => 'VARCHAR',
                 'constraint'        => '50',
                 'null'              => FALSE,
             ),
-            'slug' => array(
+            'slug'          => array(
                 'type'              => 'VARCHAR',
                 'constraint'        => '120',
             ),
@@ -112,17 +134,34 @@ class Migration_Top_articles_init extends CI_Migration {
     // --------------------------------------------------------------------
 
     /**
-     * drop articles table
+     * add_tags
      *
-     * @access  public
+     * @access  private
      * @param   void
-     *
      * @return  void
      **/
-    public function down()
+    private function add_tags()
     {
-        $this->dbforge->drop_table('articles');
-        $this->dbforge->drop_table('article_categories');
+        $this->dbforge->add_field(array(
+            'id'            => array(
+                'type'              => 'INT',
+                'constraint'        => '11',
+                'unsigned'          => TRUE,
+                'auto_increment'    => TRUE
+            ),
+            'article_id'            => array(
+                'type'              => 'INT',
+                'constraint'        => '11',
+                'unsigned'          => TRUE,
+            ),
+            'tag_id'            => array(
+                'type'              => 'INT',
+                'constraint'        => '11',
+                'unsigned'          => TRUE,
+            ),
+        ));
+        $this->dbforge->add_key('id',TRUE);
+        $this->dbforge->create_table('article_tags');
     }
 
     // --------------------------------------------------------------------

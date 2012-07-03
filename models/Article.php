@@ -41,7 +41,7 @@ class Article extends ActiveRecord\Model {
         ),
         array(
             'tags',
-            'class_name'    => '\Article\Tag',
+            'class_name'    => '\Tag',
             'through'       => 'articlestags'
         ),
     );

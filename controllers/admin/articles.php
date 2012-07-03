@@ -68,7 +68,7 @@ class Articles extends Admin_Controller {
             {
                 set_status('error', $e);
             }
-            $tags = \Article\Tag::all();
+            $tags = \Tag::all();
             $tag_list = array();
             foreach ($tags as $tag)
             {
@@ -128,27 +128,21 @@ class Articles extends Admin_Controller {
             // tags
             if ($article->tags)
             {
-                $tags_to_delete = array();
-                foreach ($article->tags as $tag)
-                {
-                    $tags_to_delete[] = $tag->id;
-                }
                 \Article\ArticlesTags::table()->delete(array('article_id' => $article->id));
             }
             $new_tags = explode(',', $this->input->post('tags'));
             foreach ($new_tags as $new_tag)
             {
                 $new_tag = trim($new_tag);
-
-                $tag = \Article\Tag::find('first', array('conditions' => array('title = ?', $new_tag)));
-
+                $tag = \Tag::find('first', array(
+                    'conditions' => array('title = ?', $new_tag))
+                );
                 if ( ! $tag)
                 {
-                    $tag = new \Article\Tag();
+                    $tag = new \Tag();
                     $tag->title = $new_tag;
                     $tag->save();
                 }
-
                 $relation = new \Article\ArticlesTags();
                 $relation->tag_id = $tag->id; 
                 $relation->article_id = $article->id;

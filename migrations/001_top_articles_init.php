@@ -161,7 +161,7 @@ class Migration_Top_articles_init extends CI_Migration {
             ),
         ));
         $this->dbforge->add_key('id',TRUE);
-        $this->dbforge->create_table('article_tags');
+        $this->dbforge->create_table('articles_tags');
     }
 
     // --------------------------------------------------------------------

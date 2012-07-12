@@ -30,7 +30,7 @@ class Article extends ActiveRecord\Model {
     static $belongs_to = array(
         array(
             'category',
-            'class_name' => '\Article\Category'
+            'class_name' => 'Category'
         )
     );
 

@@ -12,7 +12,6 @@ class Migration_Top_articles_init extends CI_Migration {
     public function up()
     {
         $this->add_articles();
-        $this->add_categories();
         $this->add_tags();
     }
 
@@ -29,7 +28,6 @@ class Migration_Top_articles_init extends CI_Migration {
     {
         $tables = array(
             'articles',
-            'article_categories',
             'images',
         );
         foreach ($tables as $table)
@@ -96,44 +94,6 @@ class Migration_Top_articles_init extends CI_Migration {
     // --------------------------------------------------------------------
 
     /**
-     * add_categories
-     *
-     * @access  private
-     * @param   void
-     * @return  void
-     **/
-    private function add_categories()
-    {
-        $this->dbforge->add_field(array(
-            'id'            => array(
-                'type'              => 'INT',
-                'constraint'        => '11',
-                'unsigned'          => TRUE,
-                'auto_increment'    => TRUE
-            ),
-            'category'      => array(
-                'type'              => 'VARCHAR',
-                'constraint'        => '50',
-                'null'              => FALSE,
-            ),
-            'slug'          => array(
-                'type'              => 'VARCHAR',
-                'constraint'        => '120',
-            ),
-            'parent_category_id' => array(
-                'type'              => 'INT',
-                'constraint'        => '11',
-                'unsigned'          => TRUE,
-                'null'              => TRUE,
-            ),
-        ));
-        $this->dbforge->add_key('id',TRUE);
-        $this->dbforge->create_table('article_categories');
-    }
-
-    // --------------------------------------------------------------------
-
-    /**
      * add_tags
      *
      * @access  private
@@ -161,7 +121,7 @@ class Migration_Top_articles_init extends CI_Migration {
             ),
         ));
         $this->dbforge->add_key('id',TRUE);
-        $this->dbforge->create_table('article_tags');
+        $this->dbforge->create_table('articles_tags');
     }
 
     // --------------------------------------------------------------------

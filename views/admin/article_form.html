@@ -58,7 +58,7 @@
                 <div class="control-group">
                     <label for="article-form-category" class="select"><?php echo lang('article-field-category'); ?></label>
                     <div class="controls">
-                        <input id="article-form-category" name="category" type="text" value="<?php echo $article->category->title; ?>" />
+                        <input id="article-form-category" name="category" type="text" value="<?php if ($article->category) { echo $article->category->title; } ?>" />
                         <script type="text/javascript">
                         window.onload = function() {
                           $('#article-form-category').typeahead({

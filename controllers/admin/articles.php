@@ -106,6 +106,7 @@ class Articles extends Admin_Controller {
                 {
                     $category = new Category();
                     $category->title = $this->input->post('category');
+                    $category->slug = url_title($category->title, '_', TRUE);
                     $category->save();
                     $article->category_id = $category->id;
                 }

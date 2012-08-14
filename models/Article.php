@@ -197,6 +197,7 @@ class Article extends ActiveRecord\Model {
         );
         // get the articles
         $result->articles = static::all($options);
+        unset($options['limit'], $options['offset']);
         $result->total_rows = static::count($options);
         return $result;
     }

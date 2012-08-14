@@ -30,7 +30,7 @@ class Article extends ActiveRecord\Model {
     static $belongs_to = array(
         array(
             'category',
-            'class_name' => '\Article\Category'
+            'class_name' => 'Category'
         )
     );
 
@@ -169,7 +169,7 @@ class Article extends ActiveRecord\Model {
             $cat_queries = array();
             foreach ($categories as $category)
             {
-                $cat_queries[] = 'article_categories.slug = ?';
+                $cat_queries[] = 'categories.slug = ?';
                 $conditions[] = $category;
             }
             $queries[] = implode(' OR ',$cat_queries);

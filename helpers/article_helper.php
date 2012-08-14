@@ -71,7 +71,7 @@ if ( ! function_exists('get_latest_articles'))
         );
         if ($category) 
         {
-            $category = Article\Category::find_by_category($category);
+            $category = Category::find_by_category($category);
             $options['conditions'] = array('category_id = ?',$category->id);
         }
         $articles = Article::all($options);
@@ -108,12 +108,12 @@ if ( ! function_exists('get_articles_page_title'))
         }
         $options['conditions'][0] = implode(' OR ',$cat_queries);
         //get all specified category names
-        $cat_result = Article\Category::all($options);
+        $cat_result = Category::all($options);
         //build array of category titles
         $cat_titles = array();
         foreach ($cat_result as $cat)
         {   
-            $cat_titles[] = $cat->category;
+            $cat_titles[] = $cat->title;
         }
         //update page title with categories
         return implode(' | ',$cat_titles);

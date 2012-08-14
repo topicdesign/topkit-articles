@@ -85,7 +85,7 @@ class Articles extends Admin_Controller {
             }
             $data['article_tags'] = implode(', ', $article_tags);
             $data['article'] = $article;
-            $data['categories'] = \Article\Category::all();
+            $data['categories'] = Category::all();
             $this->document->build('articles/admin/article_edit', $data);
         }
         else
@@ -93,7 +93,28 @@ class Articles extends Admin_Controller {
             $article->title       = $this->input->post('title');
             $article->preview     = $this->input->post('preview');
             $article->content     = $this->input->post('content');
-            $article->category_id = $this->input->post('category');
+            // $article->category_id = $this->input->post('category');
+
+            if ($this->input->post('category'))
+            {
+                $category = Category::find('all', array('conditions'=>array('title = ?', $this->input->post('category'))));
+                if ($category)
+                {
+                    $article->category_id = $category[0]->id;
+                }
+                else
+                {
+                    $category = new Category();
+                    $category->title = $this->input->post('category');
+                    $category->slug = url_title($category->title, '_', TRUE);
+                    $category->save();
+                    $article->category_id = $category->id;
+                }
+            }
+            else
+            {
+                $article->category_id = NULL;
+            }
 
             if ($this->input->post('publish-date'))
             {
@@ -131,22 +152,25 @@ class Articles extends Admin_Controller {
                 \Article\ArticlesTags::table()->delete(array('article_id' => $article->id));
             }
             $new_tags = explode(',', $this->input->post('tags'));
-            foreach ($new_tags as $new_tag)
+            if ( ! empty($new_tags) && ! in_array('', $new_tags))
             {
-                $new_tag = trim($new_tag);
-                $tag = \Tag::find('first', array(
-                    'conditions' => array('title = ?', $new_tag))
-                );
-                if ( ! $tag)
+                foreach ($new_tags as $new_tag)
                 {
-                    $tag = new \Tag();
-                    $tag->title = $new_tag;
-                    $tag->save();
+                    $new_tag = trim($new_tag);
+                    $tag = \Tag::find('first', array(
+                        'conditions' => array('title = ?', $new_tag))
+                    );
+                    if ( ! $tag)
+                    {
+                        $tag = new \Tag();
+                        $tag->title = $new_tag;
+                        $tag->save();
+                    }
+                    $relation = new \Article\ArticlesTags();
+                    $relation->tag_id = $tag->id; 
+                    $relation->article_id = $article->id;
+                    $relation->save();
                 }
-                $relation = new \Article\ArticlesTags();
-                $relation->tag_id = $tag->id; 
-                $relation->article_id = $article->id;
-                $relation->save();
             }
 
             set_status('success', 'Article Updated');

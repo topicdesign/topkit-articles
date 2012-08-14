@@ -58,12 +58,22 @@
                 <div class="control-group">
                     <label for="article-form-category" class="select"><?php echo lang('article-field-category'); ?></label>
                     <div class="controls">
-                        <select id="article-form-category" name="category">
-                            <option>Choose a category</option>
-                        <?php foreach ($categories as $c): ?>
-                            <option value="<?php echo $c->id; ?>" <?php if ($c->id == $article->category_id) echo 'selected="selected"'; ?>><?php echo $c->category; ?></option>
-                        <?php endforeach; ?>
-                        </select>
+                        <input id="article-form-category" name="category" type="text" value="<?php if ($article->category) { echo $article->category->title; } ?>" />
+                        <script type="text/javascript">
+                        window.onload = function() {
+                          $('#article-form-category').typeahead({
+                            source: [
+                              <?php 
+                                $cs = array();
+                                foreach ($categories as $c) {
+                                  $cs[] = '\'' . $c->title . '\'';
+                                }
+                                echo implode(',', $cs);
+                                ?>
+                              ]
+                          });
+                        };
+                        </script>
                     </div>
                 </div>
                 <div class="control-group">
